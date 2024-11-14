@@ -1,0 +1,25 @@
+{
+    "name": "@thecollege/azure-test-track",
+    "version": "1.0.0",
+    "description": "Azure DevOps utilities for test plan and test run management",
+    "main": "lib/reporter.js",
+    "scripts": {
+        "test": "echo \"No test specified\" && exit 0"
+    },
+    "keywords": [
+        "azure",
+        "devops",
+        "test",
+        "automation"
+    ],
+    "author": "Nathan Araujo",
+    "license": "MIT",
+    "dependencies": {
+        "@thecollege/azure-test-track": "file:thecollege-azure-test-track-1.0.0.tgz",
+        "axios": "^1.7.2",
+        "xml2js": "^0.6.2"
+    },
+    "publishConfig": {
+        "access": "public"
+    }
+}
