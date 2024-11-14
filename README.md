@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./logo-azure-test-track.png" alt="Texto alternativo" width="400" style="height: auto; display: block; margin: 0 auto;">
+  <img src="./logo-azure-test-track.png" width="400" style="height: auto; display: block; margin: 0 auto;">
 </p>
 
 
