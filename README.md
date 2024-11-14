@@ -62,9 +62,11 @@ npm install @thecollege/azure-test-track
 ## Environment Variables
 Before using this package, ensure you have the following environment variables set in your environment:
 
-ADO_ORGANIZATION: Your Azure DevOps organization name.
-ADO_PROJECT: Your Azure DevOps project name.
-ADO_PERSONAL_ACCESS_TOKEN: Your Azure DevOps personal access token with the necessary permissions.
+`ADO_ORGANIZATION`: Your Azure DevOps organization name.
+
+`ADO_PROJECT`: Your Azure DevOps project name.
+
+`ADO_PERSONAL_ACCESS_TOKEN:` Your Azure DevOps personal access token with the necessary permissions.
 
 ## Usage
 One of the main methods of this package is createTestRunByExecution, which allows you to create a test run and update results based on a provided test plan name and test result file.
@@ -72,7 +74,7 @@ One of the main methods of this package is createTestRunByExecution, which allow
 ## Example
 Here's an example of how to use 
 `createTestRunByExecution`:
-```
+```javascript
 const { createTestRunByExecution } = require('@thecollege/azure-test-track');
 
 const planName = process.env.TEST_PLAN_NAME || "YOUR PLAN NAME";
@@ -96,7 +98,7 @@ Other Available Methods
 This package also provides additional methods to support a variety of tasks in Azure DevOps test management. For example, you can retrieve all test points for a specific test plan using the getAllTestPointsByPlanName method.
 
 Example
-```
+```javascript
 const { getAllTestPointsByPlanName } = require('@thecollege/azure-test-track');
 
 const testPlanName = "Your Test Plan Name";
