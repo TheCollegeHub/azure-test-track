@@ -1,9 +1,10 @@
 # @thecollege/azure-test-track
 
 
-<div style="text-align: center;">
-  <img src="./logo-azure-test-track.png" alt="Texto alternativo" width="500" height="300">
+<div style="text-align: center; margin: 0; padding: 0;">
+  <img src="./logo-azure-test-track.png" alt="Texto alternativo" width="500" style="height: auto; display: block; margin: 0 auto;">
 </div>
+
 
 The `@thecollege/azure-test-track` package simplifies the integration with Azure DevOps for managing and updating test runs. It provides methods to create test runs, add test results, and retrieve test data, facilitating streamlined test tracking.
 
