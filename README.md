@@ -1,8 +1,5 @@
-# @thecollege/azure-test-track
-
-
 <div style="text-align: center; margin: 0; padding: 0;">
-  <img src="./logo-azure-test-track.png" alt="Texto alternativo" width="500" style="height: auto; display: block; margin: 0 auto;">
+  <img src="./logo-azure-test-track.png" alt="Texto alternativo" width="200" style="height: auto; display: block; margin: 0 auto;">
 </div>
 
 
