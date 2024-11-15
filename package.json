@@ -1,6 +1,6 @@
 {
     "name": "@thecollege/azure-test-track",
-    "version": "1.0.5",
+    "version": "1.0.6",
     "description": "Azure DevOps utilities for test plan and test run management",
     "main": "lib/reporter.js",
     "scripts": {
