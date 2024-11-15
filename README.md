@@ -1,3 +1,5 @@
+[![Tests](https://github.com/TheCollegeHub/azure-test-track/actions/workflows/tests.yml/badge.svg)](https://github.com/TheCollegeHub/azure-test-track/actions/workflows/tests.yml)
+
 <p align="center">
   <img src="https://github.com/TheCollegeHub/azure-test-track/blob/main/logo-azure-test-track.png" width="400" style="height: auto; display: block; margin: 0 auto;">
 </p>
