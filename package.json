@@ -4,7 +4,7 @@
     "description": "Azure DevOps utilities for test plan and test run management",
     "main": "lib/reporter.js",
     "scripts": {
-        "test": "echo \"No test specified\" && exit 0"
+        "test": "npx jest"
     },
     "keywords": [
         "azure",
@@ -20,5 +20,8 @@
     },
     "publishConfig": {
         "access": "public"
+    },
+    "devDependencies": {
+        "jest": "^29.7.0"
     }
 }

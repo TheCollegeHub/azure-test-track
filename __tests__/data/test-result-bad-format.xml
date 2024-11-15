@@ -1,0 +1,5 @@
+ <testsuites>
+    <testsuite name="login.spec.ts">
+        <testcase name="TC_1234567 - User should be able to do login with success" classname="login.spec.ts" time="211.158"
+    </testsuite>
+</testsuites>

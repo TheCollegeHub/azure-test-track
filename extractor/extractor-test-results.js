@@ -16,15 +16,31 @@ function readAndProcessJUnitXML(filePath) {
                     return reject(err);
                 }
 
-                const newResultsData = result.testsuites.testsuite.flatMap(suite => 
-                    suite.testcase.map(testcase => {
+                if (!result || !result.testsuites || !result.testsuites.testsuite) {
+                    return resolve([]);  
+                }
+                
+
+                const newResultsData = result.testsuites.testsuite.flatMap(suite => {
+                    if (!suite.testcase || !Array.isArray(suite.testcase)) {
+                        return []; 
+                    }
+                
+                    return suite.testcase.map(testcase => {
                         const testName = testcase.$.name;
                         const testCaseIdMatch = testName.match(/TC_(\d+)/);
                         const testCaseId = testCaseIdMatch ? parseInt(testCaseIdMatch[1]) : null;
-                        const outcome = testcase.failure || testcase.error ? "Failed" : "Passed";
+                        
+                        let outcome = "Passed";
+                        if (testcase.failure || testcase.error) {
+                            outcome = "Failed";
+                        } else if (testcase.skipped) {
+                            outcome = "Skipped";
+                        }
 
                         return testCaseId ? { testCaseId, outcome } : null;
                     })
+                }
                 ).filter(Boolean);
                 
                 resolve(newResultsData);

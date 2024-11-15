@@ -1,0 +1,5 @@
+<testsuites>
+<testsuite name="empty.spec.ts">
+    <!-- No tests here -->
+</testsuite>
+</testsuites>

@@ -1,0 +1,21 @@
+<testsuites>
+  <testsuite name="login.spec.ts" timestamp="2024-11-07T21:18:21.215Z" hostname="chromium" tests="2" failures="1" skipped="0" time="367.297" errors="0">
+    <testcase name="TC_1234567 - User should be able to do login with success" classname="login.spec.ts" time="211.158" />
+    <testcase name="TC_7654321 - User should see an error for invalid credentials" classname="login.spec.ts" time="156.139">
+      <failure message="Expected error message not displayed">AssertionError: Expected...</failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="checkout.spec.ts" timestamp="2024-11-07T22:00:00.000Z" hostname="firefox" tests="3" failures="0" skipped="1" time="512.501" errors="0">
+    <testcase name="TC_1122334 - User can add items to cart" classname="checkout.spec.ts" time="200.000" />
+    <testcase name="TC_5566778 - User can proceed to checkout" classname="checkout.spec.ts" time="210.000" />
+    <testcase name="TC_9988776 - User can apply discount coupon" classname="checkout.spec.ts" time="102.501">
+      <skipped />
+    </testcase>
+  </testsuite>
+  <testsuite name="payment.spec.ts" timestamp="2024-11-07T22:30:00.000Z" hostname="webkit" tests="2" failures="1" skipped="0" time="400.200" errors="0">
+    <testcase name="TC_3456789 - User can make payment with credit card" classname="payment.spec.ts" time="300.000">
+      <failure message="Payment gateway timeout">TimeoutError: Request took too long...</failure>
+    </testcase>
+    <testcase name="TC_9876543 - User sees error for expired credit card" classname="payment.spec.ts" time="100.200" />
+  </testsuite>
+</testsuites>
