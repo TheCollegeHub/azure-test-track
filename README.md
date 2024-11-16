@@ -1,4 +1,5 @@
-[![Tests and Publish](https://github.com/TheCollegeHub/azure-test-track/actions/workflows/tests-publish.yml/badge.svg)](https://github.com/TheCollegeHub/azure-test-track/actions/workflows/tests-publish.yml) [![npm version](https://badge.fury.io/js/@thecollege%2Fazure-test-track.svg?icon=si%3Anpm&icon_color=%2334eacb)](https://badge.fury.io/js/@thecollege%2Fazure-test-track)
+[![Tests and Publish](https://github.com/TheCollegeHub/azure-test-track/actions/workflows/tests-publish.yml/badge.svg)](https://github.com/TheCollegeHub/azure-test-track/actions/workflows/tests-publish.yml) [![npm version](https://badge.fury.io/js/@thecollege%2Fazure-test-track.svg?icon=si%3Anpm&icon_color=%2334eacb)](https://badge.fury.io/js/@thecollege%2Fazure-test-track) ![Downloads](https://img.shields.io/npm/dw/@thecollege/azure-test-track)
+
 
 
 
