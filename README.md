@@ -1,4 +1,4 @@
-[![Tests](https://github.com/TheCollegeHub/azure-test-track/actions/workflows/tests.yml/badge.svg)](https://github.com/TheCollegeHub/azure-test-track/actions/workflows/tests.yml) [![npm version](https://badge.fury.io/js/@thecollege%2Fazure-test-track.svg)](https://badge.fury.io/js/@thecollege%2Fazure-test-track)
+[![Tests](https://github.com/TheCollegeHub/azure-test-track/actions/workflows/tests.yml/badge.svg)](https://github.com/TheCollegeHub/azure-test-track/actions/workflows/tests.yml) [![npm version](https://badge.fury.io/js/@thecollege%2Fazure-test-track.svg?icon=si%3Anpm&icon_color=%2334eacb)](https://badge.fury.io/js/@thecollege%2Fazure-test-track)
 
 
 
