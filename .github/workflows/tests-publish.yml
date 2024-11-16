@@ -43,6 +43,3 @@ jobs:
         run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: Create tag for version
-        run: git tag $(node -p "require('./package.json').version") && git push origin --tags
