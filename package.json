@@ -1,11 +1,15 @@
 {
     "name": "@thecollege/azure-test-track",
-    "version": "1.0.10",
+    "version": "1.0.11",
     "description": "Azure DevOps utilities for test plan and test run management",
     "repository": {
         "type": "git",
         "url": "git+https://github.com/TheCollegeHub/azure-test-track.git"
     },
+    "bugs": {
+    "url": "https://github.com/TheCollegeHub/azure-test-track/issues"
+    },
+    "homepage": "https://github.com/TheCollegeHub/azure-test-track#readme",
     "main": "lib/reporter.js",
     "scripts": {
         "test": "npx jest"
