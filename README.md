@@ -41,14 +41,253 @@ This automation significantly streamlines the process of tracking test results a
 
 
 # Supported Test Result Format
-At the moment, this package supports only JUnit XML format for test results. The expected format is as follows:
-```xml
+At the moment, this package supports JUnit XML, Cucumber-JSON and Playwright-JSON format for test results. The expected formats are as follows:
+
+Junit Format
+```xml 
 <testsuite name="login.spec.ts" timestamp="2024-11-07T21:18:21.215Z" hostname="chromium" tests="1" failures="0" skipped="0" time="367.297" errors="0">
   <testcase name="TC_1234567 - User should be able to do login with success" classname="login.spec.ts" time="211.158">
   </testcase>
 </testsuite>
 
 ```
+
+Cucumber-JSON
+```json
+[
+  {
+    "description": "",
+    "elements": [
+      {
+        "description": "",
+        "id": "login;tc_1234567---user-should-be-able-to-do-login-with-success",
+        "keyword": "Scenario",
+        "line": 18,
+        "name": "TC_1234567 - User should be able to do login with success",
+        "steps": [
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 19,
+            "name": "I have into Login page",
+            "match": {
+              "location": "not available:0"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 22406000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 20,
+            "name": "I do login with valid credentials",
+            "match": {
+              "location": "not available:0"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 135832000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 27,
+            "name": "I should be redirected to home successfully",
+            "match": {
+              "location": "not available:0"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 235650000000
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@login",
+            "line": 1
+          }
+        ],
+        "type": "scenario"
+      }
+    ],
+    "id": "login",
+    "line": 2,
+    "keyword": "Feature",
+    "name": "Login",
+    "tags": [
+      {
+        "name": "@login",
+        "line": 1
+      }
+    ],
+    "uri": "cypress\\e2e\\features\\login\\login.feature"
+  }
+]
+```
+
+Playwright-JSON
+```json
+{
+  "config": {
+    "configFile": "C:\\Users\\12345678\\myPortal\\playwright.config.ts",
+    "rootDir": "C:/Users/12345678/myPortal/tests",
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 5
+    },
+    "preserveOutput": "always",
+    "reporter": [
+      [
+        "junit",
+        {
+          "outputFile": "test-results/results.xml"
+        }
+      ],
+      [
+        "html",
+        {
+          "open": "never"
+        }
+      ],
+      [
+        "json",
+        {
+          "outputFile": "test-results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 15000
+    },
+    "quiet": false,
+    "projects": [
+      {
+        "outputDir": "C:/Users/12345678/Myportal/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {},
+        "id": "firefox",
+        "name": "firefox",
+        "testDir": "C:/Users/12345678/Myportal/test-results",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 2400000
+      }
+    ],
+    "shard": null,
+    "updateSnapshots": "missing",
+    "version": "1.48.2",
+    "workers": 5,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "login.spec.ts",
+      "file": "login.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "TC_12345678 - User should be able to do login with success",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 2400000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "firefox",
+              "projectName": "firefox",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "status": "passed",
+                  "duration": 28115,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2024-11-26T14:03:00.516Z",
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8971264756764dffdgfdg565635t5f7b75e",
+          "file": "login.spec.ts",
+          "line": 48,
+          "column": 5
+        }
+      ]
+    },
+    {
+      "title": "password.spec.ts",
+      "file": "password.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "TC_11223344 - User should be able to recovery password with success",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 2400000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "firefox",
+              "projectName": "firefox",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "status": "passed",
+                  "duration": 223373,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2024-11-26T14:03:00.480Z",
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "194a8db7bd1afdff3546asadsf20e1e7b0",
+          "file": "password.spec.ts",
+          "line": 46,
+          "column": 5
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2024-11-26T14:02:58.819Z",
+    "duration": 1841878.181,
+    "expected": 2,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}
+``` 
+
 - `Test Case ID Format`: The test case ID from Azure DevOps must follow the format TC_[ID_FROM_AZURE] in your test result file. This ID will be used to link the results to the corresponding test case in Azure DevOps.
 
 For any other result file format, please, contact me or contri
@@ -85,7 +324,8 @@ const planName = process.env.TEST_PLAN_NAME || "YOUR PLAN NAME";
 const testSettings = {
     resultFilePath: './test-results/results.xml',
     planName: planName,
-    testRunName: "[Regression][Platform] E2E Automated Test Run"
+    testRunName: "[Regression][Platform] E2E Automated Test Run",
+    reportType: "junit" // For versions above 1.0.13 should have this property, you need to pass one of result formats available (junit, cucumber-json, playwright-json)
 };
 
 const reportTestResults = async () => {

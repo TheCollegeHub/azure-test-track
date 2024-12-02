@@ -49,4 +49,77 @@ function readAndProcessJUnitXML(filePath) {
     });
 }
 
-module.exports = { readAndProcessJUnitXML };
+function readAndProcessCucumberJSON(filePath) {
+    console.log("Reading and processing Cucumber JSON file...");
+    return new Promise((resolve, reject) => {
+        fs.readFile(filePath, 'utf-8', (err, data) => {
+            if (err) {
+                console.error("Error reading JSON file:", err);
+                return reject(err);
+            }
+
+            try {
+                const parsedData = JSON.parse(data);
+
+                const results = parsedData.flatMap(feature => {
+                    if (!feature.elements || !Array.isArray(feature.elements)) {
+                        return [];
+                    }
+
+                    return feature.elements.map(scenario => {
+                        const scenarioName = scenario.name || "Unnamed Scenario";
+
+                        const testCaseIdMatch = scenarioName.match(/TC_(\d+)/);
+                        const testCaseId = testCaseIdMatch ? parseInt(testCaseIdMatch[1]) : null;
+                        const statuses = scenario.steps.map(step => step.result?.status || "unknown");
+                        const outcome = statuses.includes("failed") ? "Failed" : "Passed";
+
+                        return testCaseId ? { testCaseId, outcome } : null;
+                    });
+                }).filter(Boolean);
+
+                resolve(results);
+            } catch (parseError) {
+                console.error("Error parsing JSON:", parseError);
+                reject(parseError);
+            }
+        });
+    });
+}
+
+function readAndProcessPlaywrightJSON(filePath) {
+    console.log("Reading and extracting test results...");
+    return new Promise((resolve, reject) => {
+        fs.readFile(filePath, 'utf-8', (err, data) => {
+            if (err) {
+                console.error("Error reading JSON file:", err);
+                return reject(err);
+            }
+
+            try {
+                const parsedData = JSON.parse(data);
+
+                const results = parsedData.suites.flatMap(suite => {
+                    return suite.specs.map(spec => {
+                        const testCaseIdMatch = spec.title.match(/TC_(\d+)/);
+                        const testCaseId = testCaseIdMatch ? parseInt(testCaseIdMatch[1]) : null;
+
+                        const outcome = spec.tests.every(test => 
+                            test.results.every(result => result.status === "passed")
+                        ) ? "Passed" : "Failed";
+
+                        return testCaseId ? { testCaseId, outcome } : null;
+                    });
+                }).filter(Boolean);
+
+                resolve(results);
+            } catch (parseError) {
+                console.error("Error parsing JSON:", parseError);
+                reject(parseError);
+            }
+        });
+    });
+}
+
+
+module.exports = { readAndProcessJUnitXML, readAndProcessCucumberJSON, readAndProcessPlaywrightJSON };

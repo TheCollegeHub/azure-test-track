@@ -1,4 +1,4 @@
-const { readAndProcessJUnitXML } = require('../extractor/extractor-test-results');  // Ajuste o caminho conforme necessário
+const { readAndProcessJUnitXML } = require('../extractor/extractor-test-results');
 const path = require('path');
 
 describe('readAndProcessJUnitXML with actual XML file', () => {
