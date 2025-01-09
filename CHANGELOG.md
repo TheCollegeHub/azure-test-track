@@ -5,17 +5,17 @@
 
 1. Added Environment Variable `ADO_COMPANY_EMAIL:`
 
-        The environment variable ADO_COMPANY_EMAIL has been added to configure the company's email. This email is required for authentication when interacting with the Azure DevOps API, as the API for updating a work item requires this specific field for authentication.
+    - The environment variable ADO_COMPANY_EMAIL has been added to configure the company's email. This email is required for authentication when interacting with the Azure DevOps API, as the API for updating a work item requires this specific field for authentication.
 
 2. Methods Added:
 
     **getWorkItemById:**
                     
-        A method to retrieve information of a work item by its ID. It makes a request to the Azure DevOps API to return the data of the requested work item.
+    - A method to retrieve information of a work item by its ID. It makes a request to the Azure DevOps API to return the data of the requested work item.
 
     **associtedTestCaseToAutomation:**
 
-        A method to associate a test case with an automated test in Azure DevOps. It updates the fields in the Associated Automation tab of the test case, including details of the automated test, such as the test name and type (e.g., E2E).
+    - A method to associate a test case with an automated test in Azure DevOps. It updates the fields in the Associated Automation tab of the test case, including details of the automated test, such as the test name and type (e.g., E2E).
 
 **Example Usage:**
 
