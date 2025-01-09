@@ -311,6 +311,9 @@ Before using this package, ensure you have the following environment variables s
 
 `ADO_PERSONAL_ACCESS_TOKEN:` Your Azure DevOps personal access token with the necessary permissions.
 
+`ADO_COMPANY_EMAIL:` Your Azure DevOps Email with the necessary permissions.
+
+
 ## Usage
 One of the main methods of this package is createTestRunByExecution, which allows you to create a test run and update results based on a provided test plan name and test result file.
 
@@ -372,3 +375,4 @@ If you need support for a different test result format, or if you would like to 
 4. Submit a pull request with a clear description of your changes.
 
 We welcome any contributions to improve the package!
+
