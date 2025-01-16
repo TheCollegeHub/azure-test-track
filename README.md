@@ -7,9 +7,15 @@
 </p>
 
 
-The `@thecollege/azure-test-track` package simplifies the integration with Azure DevOps for managing and updating test runs. It provides methods to create test runs, add test results, and retrieve test data, facilitating streamlined test tracking.
+The `@thecollege/azure-test-track` package simplifies the integration with Azure DevOps for managing and updating test runs. It provides methods to create test runs, add test results, and retrieve test data, facilitating streamlined test tracking. 
 
-## Main Workflow of the Script
+In addition, you can associate automated tests with test cases in **Azure Test Plan**, populating the `Associated Automation` tab and automatically updating the `Automation Status` field.
+
+If you need to create test cases from automated tests for a plan you created, you can do so as well.
+
+See the [CHANGELOG](./CHANGELOG.md).
+
+## Main Workflow for Test Results
 
 The script automates the process of associating test results with Azure DevOps Test Plans and Test Runs. Here's the step-by-step workflow:
 
@@ -315,7 +321,11 @@ Before using this package, ensure you have the following environment variables s
 
 
 ## Usage
-One of the main methods of this package is createTestRunByExecution, which allows you to create a test run and update results based on a provided test plan name and test result file.
+- One of the main methods of this package is `createTestRunByExecution`, which allows you to create a test run and update results based on a provided test plan name and test result file.
+- You can associated automated tests to your Azure Test Plan - TestCases using `associtedTestCaseToAutomation`. You can try to use the [Azure Test Track VSCode Extension](https://marketplace.visualstudio.com/items?itemName=araujosnathan.azure-test-track) also, if you want to associate manually when you are coding your tests.
+- If you did'nt created test cases in your plan and want an easy way to create them from autotomated tests, you can use `createTestCasesInSuite.`
+
+For more information, see the [CHANGELOG](./CHANGELOG.md).
 
 ## Example
 Here's an example of how to use 
