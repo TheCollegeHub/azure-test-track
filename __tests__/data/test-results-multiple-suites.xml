@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="Suite1" tests="2" failures="0">
+    <testcase name="Suite1 - Test A" />
+    <testcase name="Suite1 - Test B" />
+  </testsuite>
+  <testsuite name="Suite2" tests="2" failures="1">
+    <testcase name="Suite2 - Test X" />
+    <testcase name="Suite2 - Test Y" />
+  </testsuite>
+</testsuites>

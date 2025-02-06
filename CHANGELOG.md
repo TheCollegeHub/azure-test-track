@@ -1,5 +1,89 @@
 # CHANGE LOG
 
+## Version 1.4.3
+
+## Enhancements
+
+1. **Added method to update Azure Work Item fields** `updateWorkItemField`
+
+    This method allows updating a specific field in an Azure DevOps work item using a PATCH request.
+
+    **Parameters:**
+    - *workItemId (string):* The ID of the work item.
+    - *pathToField (string):* The field's path to update (e.g., /fields/System.State).
+    - *valueToUpdate (string):* The new value to assign to the field.
+
+    **Usage:** 
+    This method is useful for associating test cases to automation tools and setting their state (e.g., "Ready", "In Progress").
+Error Handling: If the request fails, an error message is thrown and logged.
+
+2. **Improved XML parsing for test case extraction** `getTestCaseNamesFromJunitXML`
+
+    This method reads and parses the XML file to extract the names of the test cases within.
+
+    **Parameters:**
+    - *filePath (string):* The path to the XML file containing test results.
+    - *Flow:* The XML is read from the file system, and xml2js is used to parse the XML into a JavaScript object. The function then extracts the test case names from the testcase nodes under the testsuite nodes.
+    - *Output:* The result is an array of objects, each containing the testName of the respective test case. If no test cases are found, an empty array is returned.
+
+3. **Automated Test Case Creation and Work Item Updates**
+
+    With all these changes you can automate the process of creating test cases in Azure DevOps, linking them to a test suite, and updating the related work items.
+
+    **Flow:**
+
+    1. The XML file is read, and the test case name are extracted.
+    2. The test cases are then created in a specified test suite under a test plan.
+    3. The work items for the created test cases are updated with automation tool information and their state is set to "Ready".
+
+    **Parameters:**
+
+    You need a predefined test plan and suite names to fetch relevant plan IDs and create a suite within that plan.
+Error Handling: If any step of the automation process fails (fetching plan ID, creating suite, etc.), it throws an error and logs the issue.
+
+**Example Final Code (Creating Automated Test Cases in AzureDevops)**
+
+```javascript
+const { 
+    getTestCaseNamesFromJunitXML, 
+    getPlanIdByName , 
+    createSuiteInPlan, 
+    createTestCasesInSuite, 
+    associtedTestCaseToAutomation , 
+    updateWorkItemField
+    } = require('@thecollege/azure-test-track');
+
+const createTestCasesInAzureDevops = async () => {
+    try {
+
+        // Get all Test Case Names from XML Result File
+        const filePath = './test-results.xml'
+        const results = await getTestCaseNamesFromJunitXML(filePath);
+        const testCaseNames = results.map(item => item.testName); 
+        console.log("Processed Results:", testCaseNames);
+        console.log("Total TestCases Found:", testCaseNames.length);
+
+        // Get Pland and Suite ID (Suite is created)
+        const planId = await getPlanIdByName("Base Test Plan");
+        const suiteId = await createSuiteInPlan(planId, "My Suite Name");
+        
+        //Create all TestCases in Plan/Suite
+        const testcaseIds = await createTestCasesInSuite(planId, suiteId, testCaseNames);
+        console.log("Total TestCases Created:", testcaseIds.length);
+        
+        //Update desired fields in the Test Case created (Update the fields you want)
+        testcaseIds.forEach(async (testCaseId) => {
+            await associtedTestCaseToAutomation(testCaseId, "My Backend Testing/Or Scenario Name" ,"API");
+            await updateWorkItemField(testCaseId, "/fields/System.State", "Ready");
+        })
+
+    } catch (error) {
+        console.error("Error creating test cases in Azure Devops:", error);
+    }
+};
+
+createTestCasesInAzureDevops();
+```
 ## Version 1.4.0
 
 ### Change Details:
