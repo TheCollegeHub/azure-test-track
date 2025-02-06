@@ -1,0 +1,14 @@
+{
+  "name": "azure-test-track-examples",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Nathan Araujo",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@thecollege/azure-test-track": "^1.4.3"
+  }
+}

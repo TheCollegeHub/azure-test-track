@@ -1,5 +1,11 @@
 # CHANGE LOG
 
+## Version 1.4.4
+
+Just adding some code examples for tasks that you need.
+
+See [CODE EXAMPLES](./examples/examples.js).
+
 ## Version 1.4.3
 
 ## Enhancements

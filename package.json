@@ -1,6 +1,6 @@
 {
     "name": "@thecollege/azure-test-track",
-    "version": "1.4.3",
+    "version": "1.4.4",
     "description": "Azure DevOps utilities for test plan and test run management",
     "repository": {
         "type": "git",

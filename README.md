@@ -13,7 +13,7 @@ In addition, you can associate automated tests with test cases in **Azure Test P
 
 If you need to create test cases from automated tests for a plan you created, you can do so as well.
 
-See the [CHANGELOG](./CHANGELOG.md).
+See the [CHANGELOG](./CHANGELOG.md) or see some [CODE EXAMPLES](./examples/examples.js).
 
 ## Main Workflow for Test Results
 
