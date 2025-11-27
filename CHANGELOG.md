@@ -1,5 +1,206 @@
 # CHANGE LOG
 
+## Version 1.5.0
+
+### New Feature: Extract TestCaseId from Properties and Annotations
+
+Added support for extracting Azure DevOps Test Case IDs directly from JUnit XML properties and Playwright JSON annotations, providing more flexibility in how test results are mapped to Azure DevOps test cases.
+
+#### What's New
+
+1. **New Method: `readAndProcessJUnitXMLUsingTestInfo`**
+
+   This method extracts `TestCaseId` values from the `<properties>` section of each test case in the JUnit XML file, rather than parsing them from the test name.
+
+   **Key Features:**
+   - Extracts `TestCaseId` from `<property name="TestCaseId" value="123456">` elements
+   - Supports multiple TestCaseId properties per test case
+   - Returns a separate result object for each TestCaseId found
+   - Maintains outcome determination (Passed/Failed/Skipped)
+
+   **Usage Example:**
+   ```javascript
+   const { readAndProcessJUnitXMLUsingTestInfo } = require('azure-test-track');
+   
+   const results = await readAndProcessJUnitXMLUsingTestInfo('./test-results.xml');
+   // Returns: [{ testCaseId: 2327280, outcome: "Passed" }, ...]
+   ```
+
+2. **New Method: `readAndProcessPlaywrightJSONUsingTestInfo`**
+
+   This method extracts `TestCaseId` values from the `annotations` array in Playwright JSON results, rather than parsing them from the test title.
+
+   **Key Features:**
+   - Extracts `TestCaseId` from annotations with `type: 'TestCaseId'`
+   - Supports multiple TestCaseId annotations per test
+   - Returns a separate result object for each TestCaseId found
+   - Maintains outcome determination (Passed/Failed)
+
+   **Usage Example:**
+   ```javascript
+   const { readAndProcessPlaywrightJSONUsingTestInfo } = require('azure-test-track');
+   
+   const results = await readAndProcessPlaywrightJSONUsingTestInfo('./test-results.json');
+   // Returns: [{ testCaseId: 2359356, outcome: "Failed" }, ...]
+   ```
+
+3. **Enhanced `createTestRunByExecution` with Backward Compatibility**
+
+   The main test run creation method now supports both extraction methods for JUnit XML and Playwright JSON:
+   
+4. **Enhanced Validation and Error Handling**
+
+   - **TestCaseId Validation**: When `useTestInfo: true` is set but no TestCaseIds are found in the results file, a helpful error is thrown with code examples showing how to add annotations correctly
+   - **Plan Validation**: Validates that the specified test plan exists before attempting to create a test run, providing clear guidance when a plan is not found
+   - **Robust Error Recovery**: Missing test case IDs are filtered out with warnings instead of causing crashes, allowing test runs to continue with valid results
+
+   **Traditional Method (existing behavior):**
+   ```javascript
+   // JUnit XML - Extract from test name
+   await createTestRunByExecution({
+       reportType: 'junit',
+       resultFilePath: './test-results.xml',
+       planName: 'My Test Plan',
+       testRunName: 'My Test Run'
+   });
+
+   // Playwright JSON - Extract from test title
+   await createTestRunByExecution({
+       reportType: 'playwright-json',
+       resultFilePath: './test-results.json',
+       planName: 'My Test Plan',
+       testRunName: 'My Test Run'
+   });
+   ```
+
+   **New Property/Annotation-Based Method:**
+   ```javascript
+   // JUnit XML - Extract from properties
+   await createTestRunByExecution({
+       reportType: 'junit',
+       resultFilePath: './test-results.xml',
+       planName: 'My Test Plan',
+       testRunName: 'My Test Run',
+       useTestInfo: true  // Enable property-based extraction
+   });
+
+   // Playwright JSON - Extract from annotations
+   await createTestRunByExecution({
+       reportType: 'playwright-json',
+       resultFilePath: './test-results.json',
+       planName: 'My Test Plan',
+       testRunName: 'My Test Run',
+       useTestInfo: true  // Enable annotation-based extraction
+   });
+   ```
+
+4. **Improved Error Handling in `updateTestRunResults`**
+
+   Enhanced error handling to gracefully skip test cases that don't exist in the test run:
+   - Logs warning messages for missing test case IDs
+   - Continues processing valid test cases
+   - Provides summary of successfully updated results
+   - Prevents crashes when test case IDs are not found in existing results
+
+#### Use Cases
+
+This feature is particularly useful when:
+- Using Playwright's `test.info()` to attach Test Case IDs as annotations
+- Multiple test cases share the same test scenario but map to different Azure DevOps test cases
+- Test names are dynamic or don't follow a predictable pattern
+- You want to separate test naming conventions from Azure DevOps test case tracking
+- Working with both JUnit XML and Playwright JSON report formats
+
+#### Playwright test.info() Example
+
+You can use Playwright's `test.info()` to attach Azure DevOps Test Case IDs as annotations, which will be included in both JUnit XML and Playwright JSON reports:
+
+```javascript
+import { test, expect } from '@playwright/test';
+
+test('Verify Product Categories Page', async ({ page }, testInfo) => {
+  // Attach one or multiple Azure DevOps Test Case IDs
+  testInfo.annotations.push({ type: 'TestCaseId', description: '2327280' });
+  testInfo.annotations.push({ type: 'TestCaseId', description: '2611725' });
+  
+  // Your test steps
+  await page.goto('https://example.com/product-categories');
+  await expect(page).toHaveTitle(/Product Categories/);
+});
+```
+
+Configure your `playwright.config.js` to generate both JUnit XML and/or JSON reports:
+
+```javascript
+export default {
+  reporter: [
+    ['junit', { outputFile: 'test-results/results.xml' }],  // For JUnit XML
+    ['json', { outputFile: 'test-results/results.json' }]   // For Playwright JSON
+  ],
+  // ... other config
+};
+```
+
+The annotations will be included in both report formats:
+- **JUnit XML**: As `<property>` elements that can be extracted using `readAndProcessJUnitXMLUsingTestInfo`
+- **Playwright JSON**: As annotation objects that can be extracted using `readAndProcessPlaywrightJSONUsingTestInfo`
+
+#### Report Format Examples
+
+**JUnit XML Format:**
+
+```xml
+<testcase name="Verify Product Categories Page" classname="product-categories.spec">
+  <properties>
+    <property name="TestCaseId" value="2327280"/>
+    <property name="TestCaseId" value="2611725"/>
+  </properties>
+</testcase>
+```
+
+**Playwright JSON Format:**
+
+```json
+{
+  "title": "Verify Product Categories Page",
+  "tests": [
+    {
+      "annotations": [
+        { "type": "TestCaseId", "description": "2327280" },
+        { "type": "TestCaseId", "description": "2611725" }
+      ],
+      "results": [
+        { "status": "passed" }
+      ]
+    }
+  ]
+}
+```
+
+#### Error Messages and Validation
+
+**Test Plan Not Found:**
+```
+Error: Test Plan 'My Plan Name' not found. Please verify that:
+1. The plan name is correct
+2. The plan exists in your Azure DevOps project
+3. You have the necessary permissions to access the plan
+```
+
+**Missing TestCaseIds when useTestInfo is true:**
+```
+Error: No TestCaseId properties found in the JUnit XML file. When useTestInfo 
+is set to true, you need to add test.info() annotations in your Playwright tests.
+
+Example:
+test("My test", async ({ page }, testInfo) => {
+  testInfo.annotations.push({ type: "TestCaseId", description: "123456" });
+  // ... your test code
+});
+
+Or set useTestInfo to false to extract TestCaseIds from test names using the TC_[ID] pattern.
+```
+
 ## Version 1.4.4
 
 Just adding some code examples for tasks that you need.

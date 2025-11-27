@@ -1,0 +1,113 @@
+{
+  "config": {
+    "configFile": "playwright.config.ts",
+    "rootDir": "tests",
+    "version": "1.53.1"
+  },
+  "suites": [
+    {
+      "title": "product-categories.spec.ts",
+      "file": "product-categories.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "Verify Product Categories endpoint",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 360000,
+              "annotations": [
+                {
+                  "type": "TestCaseId",
+                  "description": "2327280"
+                },
+                {
+                  "type": "TestCaseId",
+                  "description": "2611725"
+                }
+              ],
+              "expectedStatus": "passed",
+              "projectId": "firefox",
+              "projectName": "firefox",
+              "results": [
+                {
+                  "status": "failed",
+                  "duration": 20456
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Verify Product List loads successfully",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 360000,
+              "annotations": [
+                {
+                  "type": "TestCaseId",
+                  "description": "2611733"
+                }
+              ],
+              "expectedStatus": "passed",
+              "projectId": "firefox",
+              "projectName": "firefox",
+              "results": [
+                {
+                  "status": "passed",
+                  "duration": 15333
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Verify filtering works correctly",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 360000,
+              "annotations": [
+                {
+                  "type": "TestCaseId",
+                  "description": "3456789"
+                },
+                {
+                  "type": "TestCaseId",
+                  "description": "3456790"
+                },
+                {
+                  "type": "TestCaseId",
+                  "description": "3456791"
+                }
+              ],
+              "expectedStatus": "passed",
+              "projectId": "firefox",
+              "projectName": "firefox",
+              "results": [
+                {
+                  "status": "passed",
+                  "duration": 14334
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2025-11-27T10:00:00.000Z",
+    "duration": 50123,
+    "expected": 2,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}

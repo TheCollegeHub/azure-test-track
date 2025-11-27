@@ -1,0 +1,23 @@
+<testsuites id="" name="" tests="3" failures="1" skipped="0" errors="0" time="50.123">
+  <testsuite name="product-categories.spec.ts" timestamp="2025-11-27T10:00:00.000Z" hostname="firefox" tests="3" failures="1" skipped="0" time="50.123" errors="0">
+    <testcase name="Verify Product Categories endpoint" classname="product-categories.spec.ts" time="20.456">
+      <properties>
+        <property name="TestCaseId" value="2327280"/>
+        <property name="TestCaseId" value="2611725"/>
+      </properties>
+      <failure message="Endpoint returned 404">Error: Endpoint not found</failure>
+    </testcase>
+    <testcase name="Verify Product List loads successfully" classname="product-categories.spec.ts" time="15.333">
+      <properties>
+        <property name="TestCaseId" value="2611733"/>
+      </properties>
+    </testcase>
+    <testcase name="Verify filtering works correctly" classname="product-categories.spec.ts" time="14.334">
+      <properties>
+        <property name="TestCaseId" value="3456789"/>
+        <property name="TestCaseId" value="3456790"/>
+        <property name="TestCaseId" value="3456791"/>
+      </properties>
+    </testcase>
+  </testsuite>
+</testsuites>

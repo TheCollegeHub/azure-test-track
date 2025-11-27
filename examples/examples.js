@@ -57,7 +57,8 @@ const reportTestResults = async () => {
         resultFilePath: './test-results/results.xml',
         planName: planName,
         testRunName: "[Regression][Platform] E2E Automated Test Run",
-        reportType: "junit" // For versions above 1.0.13 should have this property, you need to pass one of result formats available (junit, cucumber-json, playwright-json)
+        reportType: "junit", // For versions above 1.0.13 should have this property, you need to pass one of result formats available (junit, cucumber-json, playwright-json)
+        useTestInfo: true // For version >= 1.5.0 | New property to indicate that TestCaseId should be extracted from TestInfo properties in JUnit XML
     };
         await createTestRunByExecution(testSettings);
 };

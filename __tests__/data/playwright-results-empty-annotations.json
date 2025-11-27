@@ -1,0 +1,35 @@
+{
+  "config": {
+    "version": "1.53.1"
+  },
+  "suites": [
+    {
+      "title": "empty-annotations.spec.ts",
+      "file": "empty-annotations.spec.ts",
+      "specs": [
+        {
+          "title": "Test without annotations",
+          "ok": true,
+          "tests": [
+            {
+              "annotations": [],
+              "results": [
+                {
+                  "status": "passed",
+                  "duration": 10000
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "expected": 1,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

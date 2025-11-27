@@ -1,0 +1,8 @@
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="10.0">
+  <testsuite name="empty-properties.spec.ts" timestamp="2025-11-27T10:00:00.000Z" hostname="chrome" tests="1" failures="0" skipped="0" time="10.0" errors="0">
+    <testcase name="Test without properties" classname="empty-properties.spec.ts" time="10.0">
+      <properties>
+      </properties>
+    </testcase>
+  </testsuite>
+</testsuites>

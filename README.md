@@ -20,7 +20,10 @@ See the [CHANGELOG](./CHANGELOG.md) or see some [CODE EXAMPLES](./examples/examp
 The script automates the process of associating test results with Azure DevOps Test Plans and Test Runs. Here's the step-by-step workflow:
 
 1. **Read Test Results**: 
-   - The script first reads the test result file, typically in JUnit XML format (until at the moment). It extracts each test case's **ID** (in the format `TC_ID`), along with the **status** (whether it passed, failed).
+   - The script reads the test result file (JUnit XML, Cucumber JSON, or Playwright JSON) and extracts each test case's **ID** along with the **status** (passed, failed, or skipped).
+   - **Two methods are available for extracting Test Case IDs from JUnit XML:**
+     - **Traditional Method (Name-Based)**: Extracts the Test Case ID from the test name using the pattern `TC_[ID]` (e.g., `TC_1234567 - User login test`)
+     - **Property-Based Method (New in v1.5.0)**: Extracts the Test Case ID from the `<properties>` section of the XML, allowing you to use Playwright's `test.info()` annotations or attach multiple Test Case IDs to a single test. Set `useTestInfo: true` in your test settings to enable this method.
 
 2. **Create a Test Plan**:
    - Before running the automation, you need to create a **Test Plan** in Azure DevOps. This Test Plan will contain the tests you want to associate with the automation results.
@@ -46,257 +49,49 @@ The script automates the process of associating test results with Azure DevOps T
 This automation significantly streamlines the process of tracking test results and associating them with the relevant Test Plan and Test Runs in Azure DevOps.
 
 
-# Supported Test Result Format
-At the moment, this package supports JUnit XML, Cucumber-JSON and Playwright-JSON format for test results. The expected formats are as follows:
+# Supported Test Result Formats
 
-Junit Format
-```xml 
-<testsuite name="login.spec.ts" timestamp="2024-11-07T21:18:21.215Z" hostname="chromium" tests="1" failures="0" skipped="0" time="367.297" errors="0">
-  <testcase name="TC_1234567 - User should be able to do login with success" classname="login.spec.ts" time="211.158">
-  </testcase>
-</testsuite>
+This package supports **JUnit XML**, **Cucumber JSON**, and **Playwright JSON** formats for test results.
 
+**New in v1.5.0**: JUnit XML and Playwright JSON now support extracting Test Case IDs from properties/annotations (using Playwright's `test.info()`) in addition to the traditional name-based extraction.
+
+For detailed format examples and usage instructions, see the **[Test Result Formats Documentation](./TEST_RESULT_FORMATS.md)**.
+
+### Quick Overview
+
+- **JUnit XML**: Extract Test Case ID from test name (`TC_[ID]`) OR from properties (new)
+- **Cucumber JSON**: Extract Test Case ID from scenario name (`TC_[ID]`)
+- **Playwright JSON**: Extract Test Case ID from test title (`TC_[ID]`) OR from annotations (new)
+
+**Property/Annotation-Based Extraction Example (New in v1.5.0):**
+```javascript
+// In your Playwright test
+test('Verify Product Categories', async ({ page }, testInfo) => {
+  testInfo.annotations.push({ type: 'TestCaseId', description: '123456' });
+  testInfo.annotations.push({ type: 'TestCaseId', description: '654321' });
+  // ... test code
+});
+
+// Configure Playwright to generate both JUnit XML and JSON reports
+// playwright.config.js
+export default {
+  reporter: [
+    ['junit', { outputFile: 'test-results/results.xml' }],
+    ['json', { outputFile: 'test-results/results.json' }]
+  ]
+};
+
+// In your test execution - use either format
+const testSettings = {
+    reportType: 'junit',  // or 'playwright-json'
+    resultFilePath: './test-results.xml',  // or './test-results.json'
+    planName: 'My Test Plan',
+    testRunName: 'My Test Run',
+    useTestInfo: true  // Enable property/annotation-based extraction
+};
 ```
 
-Cucumber-JSON
-```json
-[
-  {
-    "description": "",
-    "elements": [
-      {
-        "description": "",
-        "id": "login;tc_1234567---user-should-be-able-to-do-login-with-success",
-        "keyword": "Scenario",
-        "line": 18,
-        "name": "TC_1234567 - User should be able to do login with success",
-        "steps": [
-          {
-            "arguments": [],
-            "keyword": "Given ",
-            "line": 19,
-            "name": "I have into Login page",
-            "match": {
-              "location": "not available:0"
-            },
-            "result": {
-              "status": "passed",
-              "duration": 22406000000
-            }
-          },
-          {
-            "arguments": [],
-            "keyword": "When ",
-            "line": 20,
-            "name": "I do login with valid credentials",
-            "match": {
-              "location": "not available:0"
-            },
-            "result": {
-              "status": "passed",
-              "duration": 135832000000
-            }
-          },
-          {
-            "arguments": [],
-            "keyword": "Then ",
-            "line": 27,
-            "name": "I should be redirected to home successfully",
-            "match": {
-              "location": "not available:0"
-            },
-            "result": {
-              "status": "passed",
-              "duration": 235650000000
-            }
-          }
-        ],
-        "tags": [
-          {
-            "name": "@login",
-            "line": 1
-          }
-        ],
-        "type": "scenario"
-      }
-    ],
-    "id": "login",
-    "line": 2,
-    "keyword": "Feature",
-    "name": "Login",
-    "tags": [
-      {
-        "name": "@login",
-        "line": 1
-      }
-    ],
-    "uri": "cypress\\e2e\\features\\login\\login.feature"
-  }
-]
-```
-
-Playwright-JSON
-```json
-{
-  "config": {
-    "configFile": "C:\\Users\\12345678\\myPortal\\playwright.config.ts",
-    "rootDir": "C:/Users/12345678/myPortal/tests",
-    "forbidOnly": false,
-    "fullyParallel": true,
-    "globalSetup": null,
-    "globalTeardown": null,
-    "globalTimeout": 0,
-    "grep": {},
-    "grepInvert": null,
-    "maxFailures": 0,
-    "metadata": {
-      "actualWorkers": 5
-    },
-    "preserveOutput": "always",
-    "reporter": [
-      [
-        "junit",
-        {
-          "outputFile": "test-results/results.xml"
-        }
-      ],
-      [
-        "html",
-        {
-          "open": "never"
-        }
-      ],
-      [
-        "json",
-        {
-          "outputFile": "test-results.json"
-        }
-      ]
-    ],
-    "reportSlowTests": {
-      "max": 5,
-      "threshold": 15000
-    },
-    "quiet": false,
-    "projects": [
-      {
-        "outputDir": "C:/Users/12345678/Myportal/test-results",
-        "repeatEach": 1,
-        "retries": 0,
-        "metadata": {},
-        "id": "firefox",
-        "name": "firefox",
-        "testDir": "C:/Users/12345678/Myportal/test-results",
-        "testIgnore": [],
-        "testMatch": [
-          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
-        ],
-        "timeout": 2400000
-      }
-    ],
-    "shard": null,
-    "updateSnapshots": "missing",
-    "version": "1.48.2",
-    "workers": 5,
-    "webServer": null
-  },
-  "suites": [
-    {
-      "title": "login.spec.ts",
-      "file": "login.spec.ts",
-      "column": 0,
-      "line": 0,
-      "specs": [
-        {
-          "title": "TC_12345678 - User should be able to do login with success",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 2400000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "firefox",
-              "projectName": "firefox",
-              "results": [
-                {
-                  "workerIndex": 0,
-                  "status": "passed",
-                  "duration": 28115,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2024-11-26T14:03:00.516Z",
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "8971264756764dffdgfdg565635t5f7b75e",
-          "file": "login.spec.ts",
-          "line": 48,
-          "column": 5
-        }
-      ]
-    },
-    {
-      "title": "password.spec.ts",
-      "file": "password.spec.ts",
-      "column": 0,
-      "line": 0,
-      "specs": [
-        {
-          "title": "TC_11223344 - User should be able to recovery password with success",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 2400000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "firefox",
-              "projectName": "firefox",
-              "results": [
-                {
-                  "workerIndex": 2,
-                  "status": "passed",
-                  "duration": 223373,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2024-11-26T14:03:00.480Z",
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "194a8db7bd1afdff3546asadsf20e1e7b0",
-          "file": "password.spec.ts",
-          "line": 46,
-          "column": 5
-        }
-      ]
-    }
-  ],
-  "errors": [],
-  "stats": {
-    "startTime": "2024-11-26T14:02:58.819Z",
-    "duration": 1841878.181,
-    "expected": 2,
-    "skipped": 0,
-    "unexpected": 0,
-    "flaky": 0
-  }
-}
-``` 
-
-- `Test Case ID Format`: The test case ID from Azure DevOps must follow the format TC_[ID_FROM_AZURE] in your test result file. This ID will be used to link the results to the corresponding test case in Azure DevOps.
-
-For any other result file format, please, contact me or contri
+For any other result file format, please contact us or contribute
 
 ## Installation
 
@@ -328,8 +123,10 @@ Before using this package, ensure you have the following environment variables s
 For more information, see the [CHANGELOG](./CHANGELOG.md).
 
 ## Example
-Here's an example of how to use 
-`createTestRunByExecution`:
+
+Here are examples of how to use `createTestRunByExecution`:
+
+### Traditional Method (Extract TestCaseId from Test Name)
 ```javascript
 const { createTestRunByExecution } = require('@thecollege/azure-test-track');
 
@@ -338,7 +135,7 @@ const testSettings = {
     resultFilePath: './test-results/results.xml',
     planName: planName,
     testRunName: "[Regression][Platform] E2E Automated Test Run",
-    reportType: "junit" // For versions above 1.0.13 should have this property, you need to pass one of result formats available (junit, cucumber-json, playwright-json)
+    reportType: "junit" // Options: junit, cucumber-json, playwright-json
 };
 
 const reportTestResults = async () => {
@@ -346,8 +143,47 @@ const reportTestResults = async () => {
 };
 
 reportTestResults();
-
 ```
+
+### Property/Annotation-Based Method (New in v1.5.0)
+```javascript
+const { createTestRunByExecution } = require('@thecollege/azure-test-track');
+
+const planName = process.env.TEST_PLAN_NAME || "YOUR PLAN NAME";
+
+// Using JUnit XML with properties
+const testSettingsXML = {
+    resultFilePath: './test-results/results.xml',
+    planName: planName,
+    testRunName: "[Regression][Platform] E2E Automated Test Run",
+    reportType: "junit",
+    useTestInfo: true  // Enable property-based extraction from <properties>
+};
+
+// OR using Playwright JSON with annotations
+const testSettingsJSON = {
+    resultFilePath: './test-results/results.json',
+    planName: planName,
+    testRunName: "[Regression][Platform] E2E Automated Test Run",
+    reportType: "playwright-json",
+    useTestInfo: true  // Enable annotation-based extraction
+};
+
+const reportTestResults = async () => {
+    await createTestRunByExecution(testSettingsXML);
+    // or
+    // await createTestRunByExecution(testSettingsJSON);
+};
+
+reportTestResults();
+```
+
+**When to use `useTestInfo: true`:**
+- You're using Playwright's `test.info()` to attach Test Case IDs as annotations
+- One test validates multiple Azure DevOps Test Cases
+- You want to separate test naming from Test Case ID tracking
+- Your test names are dynamic or don't follow the `TC_[ID]` pattern
+- Works with both JUnit XML (properties) and Playwright JSON (annotations)
 
 ## Method Details
 `createTestRunByExecution`: Reads test results from a JUnit XML file and creates a new test run in Azure DevOps for a specified test plan. If the build ID is available as an environment variable (`BUILD_BUILDID`), it links the test run to that build ID.
