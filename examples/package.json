@@ -9,6 +9,6 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
-    "@thecollege/azure-test-track": "^1.4.3"
+    "@thecollege/azure-test-track": "^1.5.1"
   }
 }
