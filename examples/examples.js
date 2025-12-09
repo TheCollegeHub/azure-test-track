@@ -52,9 +52,9 @@ const associateAutomationTestsInAzureDevops = async () => {
 
 const reportTestResults = async () => {
 
-    const planName = process.env.TEST_PLAN_NAME || "YOUR PLAN NAME";
+    const planName = process.env.TEST_PLAN_NAME || "[KAP] BASE REGRESSION TESTS";
     const testSettings = {
-        resultFilePath: './test-results/results.xml',
+        resultFilePath: '../test-results/results.xml',
         planName: planName,
         testRunName: "[Regression][Platform] E2E Automated Test Run",
         reportType: "junit", // For versions above 1.0.13 should have this property, you need to pass one of result formats available (junit, cucumber-json, playwright-json)
