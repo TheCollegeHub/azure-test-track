@@ -53,18 +53,76 @@ const associateAutomationTestsInAzureDevops = async () => {
 const reportTestResults = async () => {
 
     const planName = process.env.TEST_PLAN_NAME || "[KAP] BASE REGRESSION TESTS";
-    const testSettings = {
+    
+    // ===========================
+    // OPTION 1: Using planName (backward compatible)
+    // ===========================
+    const testSettingsWithPlanName = {
         resultFilePath: '../test-results/results.xml',
-        planName: planName,
+        planName: planName,  // Uses plan name (requires API lookup)
         testRunName: "[Regression][Platform] E2E Automated Test Run",
-        reportType: "junit", // For versions above 1.0.13 should have this property, you need to pass one of result formats available (junit, cucumber-json, playwright-json)
-        useTestInfo: true // For version >= 1.5.0 | New property to indicate that TestCaseId should be extracted from TestInfo properties in JUnit XML
+        reportType: "junit",
+        useTestInfo: true
     };
-        await createTestRunByExecution(testSettings);
+
+    // ===========================
+    // OPTION 2: Using planId (FASTER! - New in v1.5.4)
+    // ===========================
+    const testSettingsWithPlanId = {
+        resultFilePath: '../test-results/results.xml',
+        planId: 1958788,  // Direct plan ID - saves ~1 second!
+        testRunName: "[Regression][Platform] E2E Automated Test Run",
+        reportType: "junit",
+        useTestInfo: true
+    };
+
+    // ===========================
+    // OPTION 3: With Configuration Filtering (New in v1.5.4)
+    // ===========================
+    
+    // Single configuration
+    const testSettingsSingleConfig = {
+        resultFilePath: '../test-results/results.xml',
+        planId: 1958788,
+        configurationName: 'ENV: STAGING',  // Only STAGING test points
+        testRunName: "[STAGING] E2E Automated Test Run",
+        reportType: "junit",
+        useTestInfo: true
+    };
+
+    // Multiple configurations
+    const testSettingsMultipleConfigs = {
+        resultFilePath: '../test-results/results.xml',
+        planId: 1958788,
+        configurationName: ['ENV: STAGING', 'ENV: PRODUCTION'],  // Array!
+        testRunName: "[STAGING+PRODUCTION] E2E Automated Test Run",
+        reportType: "junit",
+        useTestInfo: true
+    };
+
+    // ===========================
+    // OPTION 4: CI/CD Dynamic Configuration (New in v1.5.4)
+    // ===========================
+    const envs = process.env.TEST_ENVIRONMENTS?.split(',') || ['STAGING'];
+    const testSettingsForCI = {
+        resultFilePath: '../test-results/results.xml',
+        planId: parseInt(process.env.TEST_PLAN_ID || '1958788'),
+        configurationName: envs.length === 1 ? envs[0] : envs,
+        testRunName: `[${envs.join('+')}] CI Test Run`,
+        reportType: "junit",
+        useTestInfo: true
+    };
+
+    // Choose which option to use:
+    await createTestRunByExecution(testSettingsWithPlanId);
+    
+    // Note: You can enable debug logging to see detailed information:
+    // PowerShell: $env:DEBUG='true'; node examples.js
+    // Bash: DEBUG=true node examples.js
 };
 
 //Calling the desired function
 
 // associateAutomationTestsInAzureDevops()
 // createTestCasesInAzureDevops();
-// reportTestResults();
+reportTestResults();

@@ -1,5 +1,156 @@
 # CHANGE LOG
 
+## Version 1.5.4
+
+### New Features: Configurable Logger, Performance Optimization, and Configuration Filtering
+
+This release introduces three major improvements: a configurable logging system, performance optimization through direct plan ID usage, and the ability to filter test points by configuration name(s).
+
+#### 1. Configurable Logger System
+
+Added a comprehensive logging system that is **visible by default** but can be enhanced with debug mode.
+
+**Key Features:**
+- **Default Mode**: Shows info, warnings, and errors for production use
+- **Debug Mode**: Shows all logs including detailed debug information
+- **Custom Logger Support**: Inject your own logger (Winston, Pino, etc.)
+- **Zero Breaking Changes**: Existing code continues to work without modifications
+
+**Usage:**
+
+```javascript
+// Default mode - info, warnings, and errors displayed
+node your-script.js
+
+// Debug mode - see all logs including debug details
+// PowerShell
+$env:DEBUG='true'; node your-script.js
+
+// Bash
+DEBUG=true node your-script.js
+```
+
+**Custom Logger Example:**
+```javascript
+const logger = require('@thecollege/azure-test-track/lib/logger');
+const winston = require('winston');
+
+const myLogger = winston.createLogger({
+  level: 'info',
+  format: winston.format.json(),
+  transports: [new winston.transports.File({ filename: 'test-track.log' })]
+});
+
+logger.setLogger(myLogger);
+```
+
+**Log Levels:**
+- `debug` - Only with DEBUG=true (internal details, payloads, IDs)
+- `info` - Always (main operations, success messages)
+- `warn` - Always (warnings, missing test cases)
+- `error` - Always (critical errors)
+
+#### 2. Performance Optimization: Direct planId Support
+
+Added ability to pass `planId` directly instead of `planName`, **saving ~1 second per execution** by avoiding the plan lookup API call.
+
+**Before (using planName):**
+```javascript
+await createTestRunByExecution({
+    resultFilePath: './test-results.xml',
+    planName: 'My Test Plan',  // Requires API call to get plan ID
+    testRunName: 'Test Run',
+    reportType: 'junit'
+});
+```
+
+**After (using planId - Faster!):**
+```javascript
+await createTestRunByExecution({
+    resultFilePath: './test-results.xml',
+    planId: 789,  // Direct ID - no lookup needed!
+    testRunName: 'Test Run',
+    reportType: 'junit'
+});
+```
+
+**Key Benefits:**
+- **Faster execution** (time saved per run)
+- **Backward compatible** - `planName` still works
+- **Prioritizes planId** - if both provided, uses planId
+
+#### 3. Configuration Filtering: Filter Test Points by Configuration Name
+
+Added support for filtering test points by configuration name(s), enabling precise test result reporting for specific environments or browsers.
+
+**Key Features:**
+- **Single Configuration**: Pass a string for one configuration
+- **Multiple Configurations**: Pass an array for multiple configurations
+- **No Filter**: Omit parameter to report to all configurations (default)
+- **Prevents Cross-Environment Issues**: Avoid marking wrong environments as tested
+
+**Single Configuration Example:**
+```javascript
+await createTestRunByExecution({
+    resultFilePath: './test-results.xml',
+    planId: 789,
+    configurationName: 'ENV: STAGING',  // Only STAGING test points
+    testRunName: '[STAGING] Test Run',
+    reportType: 'junit',
+    useTestInfo: true
+});
+```
+
+**Multiple Configurations Example:**
+```javascript
+await createTestRunByExecution({
+    resultFilePath: './test-results.xml',
+    planId: 789,
+    configurationName: ['ENV: STAGING', 'ENV: PRODUCTION'],  // Array!
+    testRunName: '[Multi-Env] Test Run',
+    reportType: 'junit',
+    useTestInfo: true
+});
+```
+
+**Browser Filtering Example:**
+```javascript
+await createTestRunByExecution({
+    resultFilePath: './test-results.xml',
+    planId: 789,
+    configurationName: ['Windows 11 | Chrome', 'Windows 11 | Firefox'],
+    testRunName: '[Chrome+Firefox] Test Run',
+    reportType: 'junit'
+});
+```
+
+**Why This Matters:**
+
+In Azure DevOps, a single test case can have multiple test points with different configurations (STAGING, PRODUCTION, Chrome, Firefox, etc.). Without filtering:
+- ❌ Running tests in STAGING would update ALL configurations (STAGING, PRODUCTION, QA)
+- ❌ Results would be inaccurate across environments
+
+With configuration filtering:
+- ✅ Reports only to the correct environment/browser
+- ✅ Maintains accurate test results per configuration
+- ✅ Easy to use with simple configuration names
+
+**CI/CD Integration:**
+```javascript
+// GitHub Actions / Azure Pipelines
+const envs = process.env.TEST_ENVIRONMENTS.split(',');
+
+await createTestRunByExecution({
+    resultFilePath: './test-results.xml',
+    planId: parseInt(process.env.TEST_PLAN_ID),
+    configurationName: envs.length === 1 ? envs[0] : envs,
+    testRunName: `[${envs.join('+')}] CI Test Run`,
+    reportType: 'junit',
+    useTestInfo: true
+});
+```
+---
+
 ## Version 1.5.0
 
 ### New Feature: Extract TestCaseId from Properties and Annotations

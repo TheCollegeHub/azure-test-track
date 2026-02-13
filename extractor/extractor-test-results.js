@@ -1,18 +1,19 @@
 const fs = require('fs');
 const xml2js = require('xml2js');
+const logger = require('../lib/logger');
 
 function readAndProcessJUnitXML(filePath) {
-    console.log("Reading and processing XML file...");
+    logger.info("Reading and processing XML file...");
     return new Promise((resolve, reject) => {
         fs.readFile(filePath, 'utf-8', (err, data) => {
             if (err) {
-                console.error("Error reading XML file:", err);
+                logger.error("Error reading XML file:", err);
                 return reject(err);
             }
             
             xml2js.parseString(data, (err, result) => {
                 if (err) {
-                    console.error("Error parsing XML:", err);
+                    logger.error("Error parsing XML:", err);
                     return reject(err);
                 }
 
@@ -50,17 +51,17 @@ function readAndProcessJUnitXML(filePath) {
 }
 
 function readAndProcessJUnitXMLUsingTestInfo(filePath) {
-    console.log("Reading and processing XML file using TestCaseId from properties...");
+    logger.info("Reading and processing XML file using TestCaseId from properties...");
     return new Promise((resolve, reject) => {
         fs.readFile(filePath, 'utf-8', (err, data) => {
             if (err) {
-                console.error("Error reading XML file:", err);
+                logger.error("Error reading XML file:", err);
                 return reject(err);
             }
             
             xml2js.parseString(data, (err, result) => {
                 if (err) {
-                    console.error("Error parsing XML:", err);
+                    logger.error("Error parsing XML:", err);
                     return reject(err);
                 }
 
@@ -113,11 +114,11 @@ function readAndProcessJUnitXMLUsingTestInfo(filePath) {
 }
 
 function readAndProcessCucumberJSON(filePath) {
-    console.log("Reading and processing Cucumber JSON file...");
+    logger.info("Reading and processing Cucumber JSON file...");
     return new Promise((resolve, reject) => {
         fs.readFile(filePath, 'utf-8', (err, data) => {
             if (err) {
-                console.error("Error reading JSON file:", err);
+                logger.error("Error reading JSON file:", err);
                 return reject(err);
             }
 
@@ -143,7 +144,7 @@ function readAndProcessCucumberJSON(filePath) {
 
                 resolve(results);
             } catch (parseError) {
-                console.error("Error parsing JSON:", parseError);
+                logger.error("Error parsing JSON:", parseError);
                 reject(parseError);
             }
         });
@@ -151,11 +152,11 @@ function readAndProcessCucumberJSON(filePath) {
 }
 
 function readAndProcessPlaywrightJSON(filePath) {
-    console.log("Reading and extracting test results...");
+    logger.info("Reading and extracting test results...");
     return new Promise((resolve, reject) => {
         fs.readFile(filePath, 'utf-8', (err, data) => {
             if (err) {
-                console.error("Error reading JSON file:", err);
+                logger.error("Error reading JSON file:", err);
                 return reject(err);
             }
 
@@ -177,7 +178,7 @@ function readAndProcessPlaywrightJSON(filePath) {
 
                 resolve(results);
             } catch (parseError) {
-                console.error("Error parsing JSON:", parseError);
+                logger.error("Error parsing JSON:", parseError);
                 reject(parseError);
             }
         });
@@ -185,11 +186,11 @@ function readAndProcessPlaywrightJSON(filePath) {
 }
 
 function readAndProcessPlaywrightJSONUsingTestInfo(filePath) {
-    console.log("Reading and extracting test results using TestInfo annotations...");
+    logger.info("Reading and extracting test results using TestInfo annotations...");
     return new Promise((resolve, reject) => {
         fs.readFile(filePath, 'utf-8', (err, data) => {
             if (err) {
-                console.error("Error reading JSON file:", err);
+                logger.error("Error reading JSON file:", err);
                 return reject(err);
             }
 
@@ -226,7 +227,7 @@ function readAndProcessPlaywrightJSONUsingTestInfo(filePath) {
 
                 resolve(results);
             } catch (parseError) {
-                console.error("Error parsing JSON:", parseError);
+                logger.error("Error parsing JSON:", parseError);
                 reject(parseError);
             }
         });
