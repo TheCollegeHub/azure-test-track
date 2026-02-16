@@ -1,5 +1,52 @@
 # CHANGE LOG
 
+## Version 1.5.5
+
+### Bug Fix: Multiple Test Points Per Test Case Now Update Correctly
+
+Fixed a critical bug in `updateTestRunResults` where test cases with multiple test points (different configurations) were not being updated correctly.
+
+#### The Problem
+
+When a test case had multiple test points (e.g., different configurations like "Chrome", "Firefox", or environments like "STAGING", "PRODUCTION"), the previous implementation would:
+
+❌ **Overwrite test points** - Only the last test point for each test case was kept in the mapping  
+❌ **Leave test points as "In Progress"** - Other test points remained stuck in "In Progress" state in the Test Run  
+❌ **Incomplete results** - Test results were only applied to one configuration, not all
+
+**Example of the bug:**
+```
+Test Case ID 123 has:
+  - Test Point 456 (Chrome)
+  - Test Point 457 (Firefox)
+
+Old behavior:
+  - Only Test Point 457 (last one) was stored in the map
+  - Update result for TC 123 → Only Firefox was updated
+  - Chrome remained "In Progress" ❌
+```
+
+#### The Solution
+
+The new implementation correctly handles multiple test points per test case:
+
+✅ **Maps Test Case ID to Array of Test Points** - Preserves all test points for each test case  
+✅ **Updates ALL configurations** - When you update a test case result, all its test points receive the same outcome  
+✅ **Complete Test Run results** - No more stuck "In Progress" test points
+
+**Example of the fix:**
+```
+Test Case ID 123 has:
+  - Test Point 456 (Chrome)
+  - Test Point 457 (Firefox)
+
+New behavior:
+  - Both test points are stored: TC 123 → [456, 457]
+  - Update result for TC 123 with "Passed" → Both Chrome AND Firefox are updated to "Passed"
+  - Complete and accurate results ✅
+```
+---
+
 ## Version 1.5.4
 
 ### New Features: Configurable Logger, Performance Optimization, and Configuration Filtering
