@@ -1,5 +1,49 @@
 # CHANGE LOG
 
+## Version 1.5.6
+
+### Enhancement: Execution Time Tracking and Test Run Duration Fix
+
+Added accurate execution time tracking from test results and fixed Test Run duration calculation to display the actual total test execution time.
+
+#### What's New
+
+✅ **Execution Time Extraction** - Now extracts individual test execution times from JUnit XML files  
+✅ **Accurate Test Run Duration** - Test Run duration now displays the sum of all test execution times  
+✅ **Proper Timestamp Calculation** - Fixed duration calculation by setting correct start/end dates when completing Test Run
+
+#### The Problem
+
+Previously, Test Runs displayed incorrect durations:
+
+❌ **Absurd durations** - Test Runs showing durations like "739671d 14h" (over 2,000 years!)  
+❌ **Inaccurate reporting** - Duration showing "<1s" even when tests took minutes  
+❌ **Missing execution times** - Individual test execution times from JUnit results were not captured
+
+**Example of the bug:**
+```
+Test 1: 24 seconds
+Test 2: 27 seconds
+Expected Test Run Duration: ~51 seconds
+
+Old behavior:
+  - Test Run shows: "739671d 14h" or "<1s" ❌
+  - Individual test times: Not captured
+```
+**Example of the fix:**
+```
+Test 1: 24 seconds (extracted from JUnit XML)
+Test 2: 27 seconds (extracted from JUnit XML)
+Total: 51 seconds
+
+New behavior:
+  - Test Run shows: "51s" ✅
+  - Individual test times: Captured and summed
+  - Accurate duration reporting
+```
+
+---
+
 ## Version 1.5.5
 
 ### Bug Fix: Multiple Test Points Per Test Case Now Update Correctly
@@ -303,15 +347,15 @@ Added support for extracting Azure DevOps Test Case IDs directly from JUnit XML 
 #### Use Cases
 
 This feature is particularly useful when:
-- Using Playwright's `test.info()` to attach Test Case IDs as annotations
+- Using Playwright's `testInfo` parameter (or `test.info()` method) to attach Test Case IDs as annotations
 - Multiple test cases share the same test scenario but map to different Azure DevOps test cases
 - Test names are dynamic or don't follow a predictable pattern
 - You want to separate test naming conventions from Azure DevOps test case tracking
 - Working with both JUnit XML and Playwright JSON report formats
 
-#### Playwright test.info() Example
+#### Playwright testInfo Example
 
-You can use Playwright's `test.info()` to attach Azure DevOps Test Case IDs as annotations, which will be included in both JUnit XML and Playwright JSON reports:
+You can use Playwright's `testInfo` parameter to attach Azure DevOps Test Case IDs as annotations, which will be included in both JUnit XML and Playwright JSON reports:
 
 ```javascript
 import { test, expect } from '@playwright/test';
@@ -320,6 +364,21 @@ test('Verify Product Categories Page', async ({ page }, testInfo) => {
   // Attach one or multiple Azure DevOps Test Case IDs
   testInfo.annotations.push({ type: 'TestCaseId', description: '2327280' });
   testInfo.annotations.push({ type: 'TestCaseId', description: '2611725' });
+  
+  // Your test steps
+  await page.goto('https://example.com/product-categories');
+  await expect(page).toHaveTitle(/Product Categories/);
+});
+```
+
+**Alternative: Using `test.info()`**  
+You can also use `test.info()` directly during test execution (both forms are equivalent):
+
+```javascript
+test('Verify Product Categories Page', async ({ page }) => {
+  // Using test.info() instead of testInfo parameter
+  test.info().annotations.push({ type: 'TestCaseId', description: '2327280' });
+  test.info().annotations.push({ type: 'TestCaseId', description: '2611725' });
   
   // Your test steps
   await page.goto('https://example.com/product-categories');
@@ -388,11 +447,17 @@ Error: Test Plan 'My Plan Name' not found. Please verify that:
 **Missing TestCaseIds when useTestInfo is true:**
 ```
 Error: No TestCaseId properties found in the JUnit XML file. When useTestInfo 
-is set to true, you need to add test.info() annotations in your Playwright tests.
+is set to true, you need to add testInfo annotations in your Playwright tests.
 
-Example:
+Example using testInfo parameter:
 test("My test", async ({ page }, testInfo) => {
   testInfo.annotations.push({ type: "TestCaseId", description: "123456" });
+  // ... your test code
+});
+
+Or using test.info() directly:
+test("My test", async ({ page }) => {
+  test.info().annotations.push({ type: "TestCaseId", description: "123456" });
   // ... your test code
 });
 

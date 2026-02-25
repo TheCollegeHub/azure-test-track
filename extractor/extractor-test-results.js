@@ -32,6 +32,11 @@ function readAndProcessJUnitXML(filePath) {
                         const testCaseIdMatch = testName.match(/TC_(\d+)/);
                         const testCaseId = testCaseIdMatch ? parseInt(testCaseIdMatch[1]) : null;
                         
+                        // Extract execution time from the 'time' attribute (in seconds)
+                        const executionTimeInSeconds = testcase.$.time ? parseFloat(testcase.$.time) : 0;
+                        // Convert to milliseconds and round to integer
+                        const executionTime = Math.round(executionTimeInSeconds * 1000);
+                        
                         let outcome = "Passed";
                         if (testcase.failure || testcase.error) {
                             outcome = "Failed";
@@ -39,7 +44,7 @@ function readAndProcessJUnitXML(filePath) {
                             outcome = "Skipped";
                         }
 
-                        return testCaseId ? { testCaseId, outcome } : null;
+                        return testCaseId ? { testCaseId, outcome, executionTime } : null;
                     })
                 }
                 ).filter(Boolean);
@@ -83,6 +88,11 @@ function readAndProcessJUnitXMLUsingTestInfo(filePath) {
                             outcome = "Skipped";
                         }
 
+                        // Extract execution time from the 'time' attribute (in seconds)
+                        const executionTimeInSeconds = testcase.$.time ? parseFloat(testcase.$.time) : 0;
+                        // Convert to milliseconds and round to integer
+                        const executionTime = Math.round(executionTimeInSeconds * 1000);
+                        
                         // Extract TestCaseId from properties
                         const testCaseIds = [];
                         if (testcase.properties && Array.isArray(testcase.properties)) {
@@ -102,8 +112,7 @@ function readAndProcessJUnitXMLUsingTestInfo(filePath) {
                                 }
                             });
                         }
-
-                        return testCaseIds.map(testCaseId => ({ testCaseId, outcome }));
+                        return testCaseIds.map(testCaseId => ({ testCaseId, outcome, executionTime }));
                     });
                 }).filter(Boolean);
                 
