@@ -15,13 +15,13 @@ describe('readAndProcessJUnitXML with actual XML file', () => {
 
     // Assert
     const expectedResult = [
-        { testCaseId: 1234567, outcome: 'Passed' },
-        { testCaseId: 7654321, outcome: 'Failed' },
-        { testCaseId: 1122334, outcome: 'Passed' },
-        { testCaseId: 5566778, outcome: 'Passed' },
-        { testCaseId: 9988776, outcome: 'Skipped' },
-        { testCaseId: 3456789, outcome: 'Failed' },
-        { testCaseId: 9876543, outcome: 'Passed' }
+        { testCaseId: 1234567, outcome: 'Passed', executionTime: 211158 },
+        { testCaseId: 7654321, outcome: 'Failed', executionTime: 156139 },
+        { testCaseId: 1122334, outcome: 'Passed', executionTime: 200000 },
+        { testCaseId: 5566778, outcome: 'Passed', executionTime: 210000 },
+        { testCaseId: 9988776, outcome: 'Skipped', executionTime: 102501 },
+        { testCaseId: 3456789, outcome: 'Failed', executionTime: 300000 },
+        { testCaseId: 9876543, outcome: 'Passed', executionTime: 100200 }
     ];
 
     expect(result).toEqual(expectedResult);
@@ -35,7 +35,7 @@ describe('readAndProcessJUnitXML with actual XML file', () => {
         const result = await readAndProcessJUnitXML(filePath);
 
         //Asssert
-        expect(result).toEqual([{ testCaseId: 1234567, outcome: 'Passed' }]);
+        expect(result).toEqual([{ testCaseId: 1234567, outcome: 'Passed', executionTime: 211158 }]);
     });
 
     it('should correctly interpret total tests, failures, errors, and skipped', async () => {
@@ -87,12 +87,12 @@ describe('readAndProcessJUnitXMLUsingTestInfo - Property-based extraction', () =
 
         // Assert
         const expectedResult = [
-            { testCaseId: 2327280, outcome: 'Failed' },
-            { testCaseId: 2611725, outcome: 'Failed' },
-            { testCaseId: 2611733, outcome: 'Passed' },
-            { testCaseId: 3456789, outcome: 'Passed' },
-            { testCaseId: 3456790, outcome: 'Passed' },
-            { testCaseId: 3456791, outcome: 'Passed' }
+            { testCaseId: 2327280, outcome: 'Failed', executionTime: 20456 },
+            { testCaseId: 2611725, outcome: 'Failed', executionTime: 20456 },
+            { testCaseId: 2611733, outcome: 'Passed', executionTime: 15333 },
+            { testCaseId: 3456789, outcome: 'Passed', executionTime: 14334 },
+            { testCaseId: 3456790, outcome: 'Passed', executionTime: 14334 },
+            { testCaseId: 3456791, outcome: 'Passed', executionTime: 14334 }
         ];
 
         expect(result).toEqual(expectedResult);
