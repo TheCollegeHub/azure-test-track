@@ -244,10 +244,35 @@ function readAndProcessPlaywrightJSONUsingTestInfo(filePath) {
 }
 
 
+function getJUnitTotalDurationMs(filePath) {
+    logger.info("Reading testsuites total time from JUnit XML file...");
+    return new Promise((resolve, reject) => {
+        fs.readFile(filePath, 'utf-8', (err, data) => {
+            if (err) {
+                logger.error("Error reading XML file:", err);
+                return reject(err);
+            }
+
+            xml2js.parseString(data, (err, result) => {
+                if (err) {
+                    logger.error("Error parsing XML:", err);
+                    return reject(err);
+                }
+
+                const time = result?.testsuites?.$?.time;
+                const totalMs = time ? Math.round(parseFloat(time) * 1000) : 0;
+                logger.debug("Testsuites total time (ms):", totalMs);
+                resolve(totalMs);
+            });
+        });
+    });
+}
+
 module.exports = { 
     readAndProcessJUnitXML, 
     readAndProcessJUnitXMLUsingTestInfo, 
     readAndProcessCucumberJSON, 
     readAndProcessPlaywrightJSON,
-    readAndProcessPlaywrightJSONUsingTestInfo 
+    readAndProcessPlaywrightJSONUsingTestInfo,
+    getJUnitTotalDurationMs
 };

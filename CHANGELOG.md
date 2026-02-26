@@ -1,5 +1,40 @@
 # CHANGE LOG
 
+## Version 1.5.7
+
+### Enhancement: JUnit Test Run Duration Now Uses `<testsuites>` Total Time
+
+Improved Test Run duration accuracy for JUnit reports by reading the total time directly from the `<testsuites>` root element instead of summing individual `<testcase>` times.
+
+#### What's New
+
+✅ **Accurate Total Duration** - Test Run duration now uses the `time` attribute from `<testsuites>`, which represents the actual wall-clock time of the entire test run  
+✅ **New helper function** - Added `getJUnitTotalDurationMs` to the extractor for reading the `<testsuites time="...">` attribute  
+✅ **Other formats unchanged** - Cucumber JSON and Playwright JSON reports continue to sum individual test execution times as before
+
+#### Why This Matters
+
+Summing individual `<testcase>` times does not account for parallelism, setup/teardown overhead, or retry time. The `<testsuites>` `time` attribute already reflects the true elapsed time reported by the test runner.
+
+**Example:**
+```xml
+<testsuites time="35.920">
+  <testsuite ...>
+    <testcase time="24.449" />  <!-- parallel test -->
+    <testcase time="27.362" />  <!-- parallel test -->
+  </testsuite>
+</testsuites>
+```
+```
+Old behavior (sum of testcases):
+  - 24.449s + 27.362s = 51.811s ❌ (inflated when tests run in parallel)
+
+New behavior (testsuites total):
+  - 35.920s ✅ (actual elapsed time)
+```
+
+---
+
 ## Version 1.5.6
 
 ### Enhancement: Execution Time Tracking and Test Run Duration Fix
